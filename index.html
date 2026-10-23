@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bestie Match ♡ тест на совместимость</title>
+<meta name="description" content="Милый тест на совместимость с подругой: пройдите вдвоём и узнайте процент совпадения ♡">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Pixelify+Sans:wght@400;600&family=Nunito:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#ffd6ec; --bg2:#ffc1e3; --bg3:#e9d4ff;
+  --pink:#ff4fa8; --pink-d:#d6247f; --pink-l:#ff9fd0; --pink-xl:#ffe6f3;
+  --lav:#b48cff; --mint:#8ff0d0; --yellow:#fff27a;
+  --ink:#5a1a3d; --ink-soft:#8a4a6c;
+  --win:#fff7fb; --edge:#ffffff; --shadow:#c9407f;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{
+  font-family:'Nunito',system-ui,sans-serif;color:var(--ink);
+  background:
+    radial-gradient(circle at 15% 20%, #fff8 0 8%, transparent 9%),
+    radial-gradient(circle at 85% 75%, #fff6 0 6%, transparent 7%),
+    repeating-conic-gradient(#ffd0e8 0 25%, #ffe3f1 0 50%) 0 0/48px 48px;
+  overflow-x:hidden; cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath d='M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.7 4.5c2.1 0 3.6 1.2 4.3 2.4h2c.7-1.2 2.2-2.4 4.3-2.4 3.7 0 5.8 3.9 4.3 7.3C19.5 16.4 12 21 12 21z' fill='%23ff4fa8' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E") 14 14, auto;
+}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;
+  background:linear-gradient(160deg,#ffb3d980,#e6ccff80 55%,#ffd9ec80);z-index:0}
+
+/* marquee */
+.ticker{position:fixed;top:0;left:0;right:0;z-index:20;background:var(--pink);color:#fff;
+  font-family:'Pixelify Sans',monospace;font-size:15px;letter-spacing:1px;
+  border-bottom:3px solid #fff;box-shadow:0 3px 0 var(--pink-d);overflow:hidden;white-space:nowrap;height:30px;display:flex;align-items:center}
+.ticker span{display:inline-block;padding-left:100%;animation:tick 22s linear infinite}
+@keyframes tick{to{transform:translateX(-100%)}}
+
+/* floating bg things */
+#floaters{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+.fl{position:absolute;bottom:-40px;animation:floatUp linear forwards;opacity:.85;user-select:none}
+@keyframes floatUp{
+  0%{transform:translateY(0) rotate(0) scale(.8);opacity:0}
+  10%{opacity:.9}
+  100%{transform:translateY(-115vh) rotate(var(--r,180deg)) scale(1.1);opacity:0}
+}
+.spark{position:fixed;pointer-events:none;z-index:50;font-size:14px;animation:sparkle .8s ease-out forwards}
+@keyframes sparkle{to{transform:translate(var(--dx),var(--dy)) scale(.2) rotate(120deg);opacity:0}}
+
+/* layout */
+main{position:relative;z-index:5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:56px 16px 40px}
+.stage{width:100%;max-width:560px;position:relative}
+
+/* sticker decorations */
+.sticker{position:absolute;z-index:6;font-family:'Pixelify Sans',monospace;font-weight:600;font-size:13px;
+  background:var(--yellow);color:var(--ink);padding:6px 10px;border:2px solid #fff;border-radius:999px;
+  box-shadow:3px 3px 0 var(--pink-d);animation:wob 2.4s ease-in-out infinite}
+.sticker.s1{top:-14px;right:-6px;transform:rotate(12deg)}
+.sticker.s2{bottom:-14px;left:-8px;background:var(--mint);transform:rotate(-8deg);animation-delay:-1.2s}
+@keyframes wob{0%,100%{rotate:-4deg;scale:1}50%{rotate:5deg;scale:1.07}}
+
+/* retro window */
+.win{background:var(--win);border:3px solid var(--edge);border-radius:14px;
+  box-shadow:0 0 0 3px var(--pink-l),8px 8px 0 3px var(--shadow),0 20px 50px #c9407f40;overflow:hidden}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 10px;
+  background:linear-gradient(90deg,var(--pink),var(--lav));color:#fff;
+  font-family:'Pixelify Sans',monospace;font-size:15px;letter-spacing:.5px}
+.bar .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .b{width:20px;height:20px;border-radius:5px;background:#fff;color:var(--pink);display:grid;place-items:center;font-size:13px;line-height:1;box-shadow:inset -2px -2px 0 #ffc6e2}
+.body{padding:26px 22px 24px}
+
+/* screens */
+.screen{display:none}
+.screen.on{display:block;animation:pop .55s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+
+h1{font-family:'Pacifico',cursive;font-weight:400;font-size:clamp(38px,10vw,56px);line-height:1.1;text-align:center;
+  color:var(--pink);text-shadow:3px 3px 0 #fff,6px 6px 0 var(--pink-l);margin:4px 0 6px;
+  animation:shimmer 3s ease-in-out infinite}
+@keyframes shimmer{0%,100%{filter:hue-rotate(0)}50%{filter:hue-rotate(-25deg)}}
+h2{font-family:'Pacifico',cursive;font-weight:400;font-size:30px;color:var(--pink);text-align:center;text-shadow:2px 2px 0 #fff;margin-bottom:8px}
+.sub{text-align:center;color:var(--ink-soft);font-weight:700;margin-bottom:20px;line-height:1.45}
+.pix{font-family:'Pixelify Sans',monospace}
+.hero-hearts{text-align:center;font-size:34px;letter-spacing:6px;margin-bottom:4px}
+.hero-hearts span{display:inline-block;animation:bounce 1.2s ease-in-out infinite}
+.hero-hearts span:nth-child(2){animation-delay:.15s}.hero-hearts span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.invite{background:linear-gradient(135deg,#fff,var(--pink-xl));border:2px dashed var(--pink);border-radius:12px;
+  padding:14px;text-align:center;margin-bottom:18px;font-weight:800}
+.invite b{color:var(--pink-d)}
+
+label.lbl{display:block;font-family:'Pixelify Sans',monospace;font-size:15px;margin:0 0 6px 4px;color:var(--ink-soft)}
+input.name{width:100%;font:800 18px 'Nunito',system-ui,sans-serif;color:var(--ink);padding:14px 16px;border-radius:12px;
+  border:3px solid var(--pink-l);background:#fff;outline:none;transition:.2s}
+input.name:focus{border-color:var(--pink);box-shadow:0 0 0 5px #ff4fa833}
+
+.btn{display:block;width:100%;margin-top:14px;padding:15px 18px;border:3px solid #fff;border-radius:999px;
+  font:900 18px 'Nunito',system-ui,sans-serif;color:#fff;background:linear-gradient(180deg,#ff7cc0,var(--pink));
+  box-shadow:0 5px 0 var(--pink-d),0 8px 20px #ff4fa855;cursor:inherit;transition:transform .12s, box-shadow .12s;letter-spacing:.3px}
+.btn:hover{transform:translateY(-2px) scale(1.01)}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--pink-d)}
+.btn.alt{background:linear-gradient(180deg,#d3b8ff,var(--lav));box-shadow:0 5px 0 #8a5ce0,0 8px 20px #b48cff55}
+.btn.ghost{background:#fff;color:var(--pink);box-shadow:0 5px 0 var(--pink-l)}
+.btn:disabled{opacity:.5;pointer-events:none}
+
+/* quiz */
+.qhead{display:flex;justify-content:space-between;align-items:center;font-family:'Pixelify Sans',monospace;font-size:15px;margin-bottom:8px;color:var(--ink-soft)}
+.who{background:var(--pink-xl);border:2px solid var(--pink-l);border-radius:999px;padding:2px 10px;color:var(--pink-d);max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog{height:18px;border-radius:999px;background:#fff;border:3px solid var(--pink-l);overflow:hidden;margin-bottom:22px}
+.prog i{display:block;height:100%;width:0;border-radius:999px;transition:width .5s cubic-bezier(.3,1.3,.5,1);
+  background:repeating-linear-gradient(45deg,var(--pink) 0 10px,#ff7cc0 10px 20px);background-size:28px 28px;animation:stripes 1s linear infinite}
+@keyframes stripes{to{background-position:28px 0}}
+.qemoji{font-size:44px;text-align:center;animation:bounce 1.6s ease-in-out infinite}
+.qtext{font-weight:900;font-size:22px;text-align:center;line-height:1.3;margin:6px 0 20px}
+.opts{display:grid;gap:11px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:13px 16px;border-radius:14px;
+  border:3px solid var(--pink-l);background:#fff;font:800 16px 'Nunito',system-ui,sans-serif;color:var(--ink);cursor:inherit;
+  box-shadow:0 4px 0 var(--pink-l);transition:transform .15s, background .15s, border-color .15s;
+  opacity:0;animation:optIn .45s cubic-bezier(.2,1.4,.4,1) forwards}
+.opt:nth-child(2){animation-delay:.07s}.opt:nth-child(3){animation-delay:.14s}.opt:nth-child(4){animation-delay:.21s}
+@keyframes optIn{from{opacity:0;transform:translateX(-24px) rotate(-2deg)}to{opacity:1;transform:none}}
+.opt .e{font-size:24px;flex:none;width:30px;text-align:center}
+.opt:hover{transform:translateY(-2px) rotate(-.6deg);border-color:var(--pink);background:var(--pink-xl)}
+.opt.picked{background:var(--pink);border-color:#fff;color:#fff;box-shadow:0 4px 0 var(--pink-d);animation:picked .45s ease}
+@keyframes picked{30%{transform:scale(1.05) rotate(1deg)}60%{transform:scale(.98)}100%{transform:scale(1)}}
+.qslide-out{animation:slideOut .28s ease-in forwards}
+@keyframes slideOut{to{opacity:0;transform:translateX(-40px) rotate(-3deg)}}
+.back{display:inline-block;margin-top:16px;background:none;border:none;color:var(--ink-soft);font:700 14px 'Pixelify Sans',monospace;cursor:inherit;text-decoration:underline dotted}
+
+/* handoff */
+.linkbox{display:flex;gap:8px;margin-top:6px}
+.linkbox input{flex:1;min-width:0;font:700 13px 'Pixelify Sans',monospace;padding:12px;border-radius:10px;border:3px dashed var(--pink-l);background:#fff;color:var(--ink-soft)}
+.or{text-align:center;font-family:'Pixelify Sans',monospace;color:var(--ink-soft);margin:18px 0 0}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,120px);z-index:60;background:var(--ink);color:#fff;
+  font:800 15px 'Nunito',system-ui,sans-serif;padding:12px 20px;border-radius:999px;transition:transform .35s cubic-bezier(.2,1.5,.4,1);visibility:hidden}
+.toast.on{transform:translate(-50%,0);visibility:visible}
+
+/* result */
+.names{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:900;font-size:18px;margin-bottom:14px;flex-wrap:wrap}
+.names .n{background:#fff;border:3px solid var(--pink-l);border-radius:999px;padding:5px 14px;max-width:40vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.names .h{font-size:26px;animation:beat 1s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.15)}}
+.ring{--p:0;width:210px;height:210px;margin:6px auto 14px;border-radius:50%;position:relative;
+  background:conic-gradient(var(--pink) calc(var(--p)*1%),#ffe6f3 0);display:grid;place-items:center;
+  box-shadow:0 0 0 6px #fff,0 0 0 10px var(--pink-l),0 10px 30px #ff4fa855}
+.ring::after{content:"";position:absolute;inset:18px;border-radius:50%;background:var(--win)}
+.ring .pct{position:relative;z-index:1;font-family:'Pacifico',cursive;font-size:52px;color:var(--pink);text-shadow:2px 2px 0 #fff}
+.tier{text-align:center}
+.tier .tt{display:inline-block;font-family:'Pixelify Sans',monospace;font-weight:600;font-size:20px;background:var(--yellow);border:3px solid #fff;
+  box-shadow:4px 4px 0 var(--pink-d);padding:6px 14px;border-radius:10px;transform:rotate(-2deg);margin-bottom:12px}
+.tier p{font-weight:700;line-height:1.5;color:var(--ink-soft)}
+.breakdown{margin-top:22px;border-top:3px dotted var(--pink-l);padding-top:16px}
+.breakdown h3{font-family:'Pixelify Sans',monospace;font-weight:600;text-align:center;margin-bottom:12px;color:var(--pink-d)}
+.row{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:10px 12px;border-radius:12px;margin-bottom:8px;background:#fff;border:2px solid #ffe0ef;
+  opacity:0;animation:optIn .4s ease forwards}
+.row.m{background:linear-gradient(90deg,#ffe6f3,#fff);border-color:var(--pink-l)}
+.row .ic{font-size:20px}
+.row .q{font-weight:900;font-size:14px;margin-bottom:3px}
+.row .a{font-size:13px;color:var(--ink-soft);font-weight:700;line-height:1.4}
+.row .a b{color:var(--ink)}
+
+footer{position:relative;z-index:5;text-align:center;padding:0 16px 26px;font-family:'Pixelify Sans',monospace;color:var(--pink-d);font-size:14px}
+footer .hc{display:inline-block;animation:beat 1.4s infinite}
+
+@media (max-width:420px){.body{padding:22px 16px 20px}.qtext{font-size:19px}.opt{font-size:15px;padding:12px 13px}.ring{width:180px;height:180px}.ring .pct{font-size:44px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}#floaters{display:none}}
+</style>
+</head>
+<body>
+<div class="ticker"><span>♡ BESTIE MATCH ♡ тест на совместимость с подругой ♡ ✧ пройдите вдвоём ✧ узнайте процент ✧ ★ 100% кавай гарантирован ★ ♡ BESTIE MATCH ♡ xoxo ✿ y2k forever ✿</span></div>
+<div id="floaters"></div>
+
+<main>
+<div class="stage">
+  <div class="sticker s1">★ NEW ★</div>
+  <div class="sticker s2">♡ 4 bff ♡</div>
+  <div class="win">
+    <div class="bar"><span>✿</span><span class="t" id="wtitle">bestie_match.exe</span><span class="b">_</span><span class="b">□</span><span class="b">×</span></div>
+    <div class="body">
+
+      <!-- INTRO -->
+      <section class="screen" id="s-intro">
+        <div class="hero-hearts"><span>💖</span><span>🎀</span><span>💖</span></div>
+        <h1>Bestie Match</h1>
+        <p class="sub">15 вопросов ✧ две подружки ✧ один процент правды.<br>Насколько вы на одной волне? ♡</p>
+        <div class="invite" id="invite" hidden></div>
+        <label class="lbl" for="name">✎ как тебя зовут?</label>
+        <input class="name" id="name" maxlength="20" placeholder="твоё имя или ник ♡" autocomplete="off">
+        <button class="btn" id="startBtn">начать ♡</button>
+      </section>
+
+      <!-- QUIZ -->
+      <section class="screen" id="s-quiz">
+        <div class="qhead"><span class="who" id="who"></span><span id="qnum"></span></div>
+        <div class="prog"><i id="bar"></i></div>
+        <div id="qwrap">
+          <div class="qemoji" id="qemoji"></div>
+          <div class="qtext" id="qtext"></div>
+          <div class="opts" id="opts"></div>
+        </div>
+        <button class="back" id="backBtn">← назад</button>
+      </section>
+
+      <!-- HANDOFF -->
+      <section class="screen" id="s-hand">
+        <div class="hero-hearts"><span>💌</span></div>
+        <h2>Готово, <span id="p1name"></span>!</h2>
+        <p class="sub">Теперь очередь подруги. Отправь ей эту ссылку: она пройдёт тест, и вам обеим покажет процент совпадения ✧</p>
+        <div class="linkbox"><input id="inviteLink" readonly></div>
+        <button class="btn" id="shareBtn">💌 отправить ссылку</button>
+        <p class="or">— или —</p>
+        <button class="btn alt" id="handBtn">📱 передать телефон подруге</button>
+      </section>
+
+      <!-- RESULT -->
+      <section class="screen" id="s-res">
+        <div class="names"><span class="n" id="rn1"></span><span class="h">💞</span><span class="n" id="rn2"></span></div>
+        <div class="ring" id="ring"><span class="pct" id="pct">0%</span></div>
+        <div class="tier"><div class="tt" id="tierT"></div><p id="tierD"></p></div>
+        <button class="btn" id="shareRes">✨ поделиться результатом</button>
+        <button class="btn ghost" id="againBtn">↺ пройти заново</button>
+        <div class="breakdown"><h3>✧ ваши ответы ✧</h3><div id="rows"></div></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+</main>
+<footer>сделано с любовью <span class="hc">♡</span> от Sloppy</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const Q = [
+  {e:"🌙", q:"Идеальный вечер пятницы?", o:[["🛁","ванна с пенкой и сериальчик"],["💃","тусовка до утра"],["🎮","игры или ролка с ботами"],["🍕","пицца и сплетни по телефону"]]},
+  {e:"🧋", q:"Твой напиток-тотем?", o:[["🧋","бабл-ти"],["☕","раф на кокосовом"],["🍓","клубничное молоко"],["🥂","что-нибудь с блёстками"]]},
+  {e:"🌸", q:"Какой ты аниме-архетип?", o:[["😤","цундере: «н-не то чтобы ты мне нравилась!»"],["🥰","дередере: сплошная любовь"],["🔪","яндере: ты моя навсегда"],["😐","кудере: молчу, но всё чувствую"]]},
+  {e:"💬", q:"Как ты пишешь в чат?", o:[["📢","КАПСОМ И С МИЛЛИОНОМ СМАЙЛОВ"],["🎙️","голосовые по пять минут"],["🐸","стикеры вместо слов"],["🧊","«ок.»"]]},
+  {e:"⏳", q:"Выбери эпоху для жизни", o:[["💿","нулевые, y2k и раскладушки"],["📼","девяностые"],["🎀","рококо, кринолины и пирожные"],["🚀","далёкое киберпанк-будущее"]]},
+  {e:"😭", q:"Подруга пишет «у меня драма». Ты:", o:[["🏃‍♀️","уже еду с мороженым"],["🔍","скидывай скрины, разберём"],["📞","звоню прямо сейчас"],["🍿","рассказывай, я с попкорном"]]},
+  {e:"🐾", q:"Питомец мечты?", o:[["🐶","собачка"],["🐱","котик"],["🐰","кролик"],["🐉","дракон, очевидно"]]},
+  {e:"🪄", q:"Ты волшебная девочка. Твоё оружие?", o:[["💗","жезл с сердечком"],["💄","помада-лазер"],["🌙","лунная тиара"],["💅","ногти, они острые"]]},
+  {e:"👗", q:"Сборы на выход — это…", o:[["⚡","пять минут и я готова"],["💄","два часа минимум"],["👚","перемерила десять образов"],["🙈","я всегда опаздываю"]]},
+  {e:"🎀", q:"Розовый — это…", o:[["💖","мой образ жизни"],["🌷","нежно, но в меру"],["🖤","только в паре с чёрным"],["🤔","ну, норм цвет"]]},
+  {e:"📖", q:"Твой типаж в историях?", o:[["🗡️","опасный злодей"],["🧸","милый golden retriever"],["📚","загадочный умник"],["👑","избалованный принц"]]},
+  {e:"☀️", q:"Утро начинается с…", o:[["📱","часа в телефоне"],["🧴","скинкера из десяти шагов"],["😴","пяти будильников"],["🌞","бодро, я жаворонок"]]},
+  {e:"🎧", q:"Что играет на повторе?", o:[["🎤","поп-дива"],["🎸","что-то грустное с гитарой"],["🌃","сити-поп"],["💿","треки из 2007"]]},
+  {e:"✨", q:"Выбери суперсилу", o:[["🔮","читать мысли"],["🌀","телепортация"],["⏸️","останавливать время"],["🛍️","бесконечный шопинг"]]},
+  {e:"🌍", q:"Как вы вдвоём захватите мир?", o:[["💅","красотой"],["🧠","хитрым планом"],["😂","мемами"],["🍰","накормим всех тортиками"]]},
+];
+const TIERS = [
+  [90,"💞 одна извилина на двоих","Это даже немного пугающе. Вы точно не один человек в двух телах? Соулмейты, без вариантов."],
+  [70,"🎀 сёстры по разуму","Вы понимаете друг друга с полуслова, а иногда и вообще без слов. Берегите друг друга ♡"],
+  [50,"🍓 идеальный баланс","Достаточно похожи, чтобы было уютно, и достаточно разные, чтобы не было скучно."],
+  [30,"🌗 противоположности притягиваются","Вы как клубника и шоколад: разные, но вместе получается вкуснее всего."],
+  [0,"🌪️ хаос-дуэт","Вы почти во всём разные, и это самое весёлое. С вами точно никогда не скучно!"],
+];
+
+const $ = id => document.getElementById(id);
+const st = {p1:null, me:"", ans:[], i:0, mode:"solo"}; // mode: solo | invited | local
+
+/* --- encoding --- */
+const enc = o => btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const dec = s => { try{ s=s.replace(/-/g,"+").replace(/_/g,"/"); while(s.length%4) s+="="; return JSON.parse(decodeURIComponent(escape(atob(s)))); }catch(e){ return null; } };
+const valid = p => p && typeof p.n==="string" && typeof p.a==="string" && /^[0-3]+$/.test(p.a) && p.a.length===Q.length;
+const base = () => location.origin + location.pathname;
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* --- screens --- */
+function show(id, title){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("on"));
+  $(id).classList.add("on");
+  if(title) $("wtitle").textContent = title;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function intro(){
+  $("name").value = "";
+  const inv = $("invite");
+  if(st.p1 && st.mode!=="solo"){
+    inv.hidden = false;
+    inv.innerHTML = st.mode==="local"
+      ? `📱 <b>${esc(st.p1.n)}</b> уже ответила! Теперь твоя очередь, только не подглядывай ♡`
+      : `💌 <b>${esc(st.p1.n)}</b> прошла тест и зовёт тебя проверить совместимость!`;
+  } else inv.hidden = true;
+  show("s-intro","bestie_match.exe");
+  setTimeout(()=>$("name").focus(),300);
+}
+
+$("startBtn").onclick = () => {
+  const n = $("name").value.trim();
+  if(!n){ $("name").animate([{transform:"translateX(0)"},{transform:"translateX(-8px)"},{transform:"translateX(8px)"},{transform:"translateX(0)"}],{duration:300}); toast("напиши своё имя ♡"); return; }
+  st.me = n; st.ans = []; st.i = 0;
+  show("s-quiz","question.exe"); renderQ();
+};
+$("name").addEventListener("keydown", e => { if(e.key==="Enter") $("startBtn").click(); });
+
+function renderQ(){
+  const q = Q[st.i];
+  $("who").textContent = "♡ " + st.me;
+  $("qnum").textContent = `${st.i+1} / ${Q.length}`;
+  $("bar").style.width = (st.i/Q.length*100) + "%";
+  $("qemoji").textContent = q.e;
+  $("qtext").textContent = q.q;
+  $("backBtn").style.visibility = st.i ? "visible" : "hidden";
+  const box = $("opts"); box.innerHTML = "";
+  q.o.forEach(([e,t],k) => {
+    const b = document.createElement("button");
+    b.className = "opt" + (st.ans[st.i]===k ? " picked":"");
+    b.innerHTML = `<span class="e">${e}</span><span>${esc(t)}</span>`;
+    b.onclick = ev => pick(k, b, ev);
+    box.appendChild(b);
+  });
+  $("qwrap").classList.remove("qslide-out");
+}
+
+let busy = false;
+function pick(k, b, ev){
+  if(busy) return; busy = true;
+  st.ans[st.i] = k;
+  b.classList.add("picked");
+  burst(ev.clientX, ev.clientY, 10);
+  setTimeout(()=>{
+    $("qwrap").classList.add("qslide-out");
+    setTimeout(()=>{
+      busy = false;
+      st.i++;
+      if(st.i < Q.length){ renderQ(); $("qwrap").animate([{opacity:0,transform:"translateX(40px)"},{opacity:1,transform:"none"}],{duration:300,easing:"ease-out"}); }
+      else { $("bar").style.width = "100%"; finish(); }
+    },260);
+  },330);
+}
+$("backBtn").onclick = () => { if(st.i>0 && !busy){ st.i--; renderQ(); } };
+
+function finish(){
+  const me = {n:st.me, a:st.ans.join("")};
+  if(st.p1){ result(st.p1, me); return; }
+  st.p1 = me;
+  $("p1name").textContent = me.n;
+  $("inviteLink").value = base() + "#i=" + enc(me);
+  show("s-hand","send_to_bestie.exe");
+  confetti(40);
+}
+
+$("shareBtn").onclick = () => share($("inviteLink").value, `${st.p1.n} зовёт тебя пройти тест на совместимость 💖`);
+$("inviteLink").onclick = e => e.target.select();
+$("handBtn").onclick = () => { st.mode = "local"; intro(); };
+
+/* --- result --- */
+function result(a, b){
+  let m = 0;
+  for(let i=0;i<Q.length;i++) if(a.a[i]===b.a[i]) m++;
+  const p = Math.round(m/Q.length*100);
+  st.last = {a,b};
+  $("rn1").textContent = a.n; $("rn2").textContent = b.n;
+  const t = TIERS.find(x => p >= x[0]);
+  $("tierT").textContent = t[1]; $("tierD").textContent = `Совпало ${m} из ${Q.length} ответов. ` + t[2];
+  const rows = $("rows"); rows.innerHTML = "";
+  Q.forEach((q,i)=>{
+    const x = +a.a[i], y = +b.a[i], ok = x===y;
+    const r = document.createElement("div");
+    r.className = "row" + (ok ? " m":"");
+    r.style.animationDelay = (0.9 + i*0.05) + "s";
+    r.innerHTML = `<span class="ic">${ok?"💖":"🤍"}</span><div><div class="q">${esc(q.q)}</div>` +
+      (ok ? `<div class="a">обе: <b>${q.o[x][0]} ${esc(q.o[x][1])}</b></div>`
+          : `<div class="a">${esc(a.n)}: <b>${q.o[x][0]} ${esc(q.o[x][1])}</b><br>${esc(b.n)}: <b>${q.o[y][0]} ${esc(q.o[y][1])}</b></div>`) + `</div>`;
+    rows.appendChild(r);
+  });
+  show("s-res","result.exe");
+  history.replaceState(null,"", base() + "#r=" + enc({x:a, y:b}));
+  // count up
+  const ring = $("ring"), pct = $("pct"), t0 = performance.now(), dur = 1800;
+  (function step(now){
+    const k = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-k,3), v = Math.round(p*e);
+    ring.style.setProperty("--p", v); pct.textContent = v + "%";
+    if(k<1) requestAnimationFrame(step); else { confetti(p>=50 ? 90 : 45); ring.animate([{transform:"scale(1)"},{transform:"scale(1.08)"},{transform:"scale(1)"}],{duration:500}); }
+  })(t0);
+}
+$("shareRes").onclick = () => { const {a,b} = st.last; share(location.href, `${a.n} и ${b.n}: совместимость ${$("pct").textContent} 💞`); };
+$("againBtn").onclick = () => { st.p1 = null; st.mode = "solo"; history.replaceState(null,"",base()); intro(); };
+
+/* --- share / toast --- */
+async function share(url, text){
+  if(navigator.share){ try{ await navigator.share({title:"Bestie Match", text, url}); return; }catch(e){ if(e.name==="AbortError") return; } }
+  try{ await navigator.clipboard.writeText(url); toast("ссылка скопирована ♡"); }
+  catch(e){ $("inviteLink").select(); toast("скопируй ссылку вручную ♡"); }
+}
+let tt;
+function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("on"),2000); }
+
+/* --- eye candy --- */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const FL = ["💖","💗","🎀","✨","⭐","🌸","💕","🍓","☁️","♡","✿","💫"];
+function floater(){
+  if(reduce || document.hidden) return;
+  const s = document.createElement("span");
+  s.className = "fl"; s.textContent = FL[Math.random()*FL.length|0];
+  const d = 9 + Math.random()*9;
+  s.style.cssText = `left:${Math.random()*100}vw;font-size:${14+Math.random()*22}px;animation-duration:${d}s;--r:${(Math.random()*360-180)|0}deg;color:#ff4fa8`;
+  $("floaters").appendChild(s); setTimeout(()=>s.remove(), d*1000);
+}
+setInterval(floater, 700); for(let i=0;i<6;i++) setTimeout(floater, i*200);
+
+let lastSp = 0;
+addEventListener("pointermove", e => {
+  if(reduce) return; const n = performance.now(); if(n-lastSp < 45) return; lastSp = n;
+  spark(e.clientX, e.clientY, ["✨","✦","♡","⋆"][Math.random()*4|0], 22);
+});
+function spark(x,y,ch,dist){
+  const s = document.createElement("span"); s.className = "spark"; s.textContent = ch;
+  const a = Math.random()*Math.PI*2;
+  s.style.cssText = `left:${x}px;top:${y}px;color:${["#ff4fa8","#b48cff","#ff9fd0","#ffb800"][Math.random()*4|0]};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist+10}px`;
+  document.body.appendChild(s); setTimeout(()=>s.remove(), 800);
+}
+function burst(x,y,n){ if(reduce) return; for(let i=0;i<n;i++) spark(x,y,["💖","✨","🎀","♡"][i%4], 40+Math.random()*40); }
+function confetti(n){
+  if(reduce) return;
+  for(let i=0;i<n;i++){
+    const s = document.createElement("span"); s.className = "spark";
+    s.textContent = ["💖","🎀","✨","🌸","💕","⭐","🍓"][Math.random()*7|0];
+    const x = innerWidth/2 + (Math.random()-.5)*120, y = innerHeight*.45;
+    s.style.cssText = `left:${x}px;top:${y}px;font-size:${16+Math.random()*16}px;--dx:${(Math.random()-.5)*innerWidth}px;--dy:${(Math.random()-.3)*innerHeight*.9}px;animation-duration:${1.2+Math.random()*1.2}s`;
+    document.body.appendChild(s); setTimeout(()=>s.remove(), 2600);
+  }
+}
+
+/* --- boot --- */
+function boot(){
+  const h = location.hash;
+  if(h.startsWith("#r=")){
+    const d = dec(h.slice(3));
+    if(d && valid(d.x) && valid(d.y)){ st.p1 = d.x; result(d.x, d.y); return; }
+  }
+  if(h.startsWith("#i=")){
+    const d = dec(h.slice(3));
+    if(valid(d)){ st.p1 = d; st.mode = "invited"; intro(); return; }
+    toast("ссылка сломалась, начнём заново ♡");
+  }
+  intro();
+}
+boot();
+</script>
+</body>
+</html>
